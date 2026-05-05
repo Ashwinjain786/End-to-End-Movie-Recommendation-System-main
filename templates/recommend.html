@@ -1,0 +1,145 @@
+{% if error %}
+<section class="empty-state error-state">
+  <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+  <h2>{{ error }}</h2>
+</section>
+{% else %}
+<article class="movie-detail">
+  <section class="movie-hero{% if backdrop %} has-backdrop{% endif %}"{% if backdrop %} style="--movie-backdrop: url('{{ backdrop }}');"{% endif %}>
+    <div class="poster-frame">
+      {% if poster %}
+      <img class="poster" src="{{ poster }}" alt="{{ title }} poster">
+      {% else %}
+      <div class="poster-placeholder">No poster</div>
+      {% endif %}
+    </div>
+
+    <div class="movie-copy">
+      <p class="eyebrow">{{ status }}{% if release_date %} / {{ release_date }}{% endif %}</p>
+      <h2>{{ title }}</h2>
+      <p class="overview">{{ overview }}</p>
+      {% if source_note %}
+      <p class="source-note">{{ source_note }}</p>
+      {% endif %}
+
+      <div class="stats-grid">
+        <div class="rating-stat">
+          <span>Rating</span>
+          <strong><i class="fa fa-star" aria-hidden="true"></i> {{ vote_average }}/10</strong>
+          <small>{{ vote_count }} votes</small>
+        </div>
+        <div>
+          <span>Runtime</span>
+          <strong>{{ runtime }}</strong>
+        </div>
+        <div>
+          <span>Genres</span>
+          <strong>{{ genres or "Not available" }}</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if casts %}
+  <section class="content-section">
+    <div class="section-heading">
+      <h3>Top Cast</h3>
+    </div>
+
+    <div class="card-grid cast-grid">
+      {% for person in casts %}
+      <button class="person-card" type="button" data-toggle="modal" data-target="#cast-{{ person.id }}">
+        {% if person.profile %}
+        <img src="{{ person.profile }}" alt="{{ person.name }} profile">
+        {% else %}
+        <div class="profile-placeholder">{{ person.name[:1] }}</div>
+        {% endif %}
+        <span>{{ person.name }}</span>
+        <small>{{ person.character }}</small>
+      </button>
+
+      <div class="modal fade" id="cast-{{ person.id }}" tabindex="-1" role="dialog" aria-labelledby="cast-title-{{ person.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content cast-modal">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cast-title-{{ person.id }}">{{ person.name }}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="modal-profile">
+                {% if person.profile %}
+                <img class="profile-pic" src="{{ person.profile }}" alt="{{ person.name }} profile">
+                {% else %}
+                <div class="profile-placeholder large">{{ person.name[:1] }}</div>
+                {% endif %}
+              </div>
+              <div class="modal-bio">
+                <dl>
+                  <dt>Birthday</dt>
+                  <dd>{{ person.birthday }}</dd>
+                  <dt>Place of Birth</dt>
+                  <dd>{{ person.place }}</dd>
+                </dl>
+                <p>{{ person.bio }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="content-section">
+    <div class="section-heading">
+      <h3>User Reviews</h3>
+    </div>
+
+    {% if reviews %}
+    <div class="review-list">
+      {% for review in reviews %}
+      <article class="review-item">
+        <p>{{ review.text }}</p>
+        <span class="sentiment sentiment-{{ review.sentiment|lower }}">{{ review.sentiment }}</span>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="section-note">Reviews are not available for this movie right now.</p>
+    {% endif %}
+  </section>
+
+  <section class="content-section">
+    <div class="section-heading">
+      <h3>Recommended Movies</h3>
+    </div>
+
+    {% if recommendation_note %}
+    <p class="section-note">{{ recommendation_note }}</p>
+    {% endif %}
+
+    {% if movie_cards %}
+    <div class="card-grid movie-grid">
+      {% for movie in movie_cards %}
+      <button class="movie-tile" type="button" data-title="{{ movie.query }}" onclick="recommendcard(this)">
+        {% if movie.poster %}
+        <img src="{{ movie.poster }}" alt="{{ movie.title }} poster">
+        {% else %}
+        <div class="poster-placeholder compact">No poster</div>
+        {% endif %}
+        <span>{{ movie.title }}</span>
+        {% if movie.rating %}
+        <small>{{ movie.rating }}/10</small>
+        {% endif %}
+      </button>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="section-note">No recommendations are available for this movie yet.</p>
+    {% endif %}
+  </section>
+</article>
+{% endif %}

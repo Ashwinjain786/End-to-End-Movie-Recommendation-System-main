@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Movie Recommendation System</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,500,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    window.films = {{ suggestions|tojson }};
+  </script>
+</head>
+
+<body id="content">
+  <div id="loader" class="loader" aria-hidden="true">
+    <div class="loader-spinner"></div>
+    <span>Loading movie details</span>
+  </div>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand-lockup">
+        <span class="brand-mark">MR</span>
+        <span class="brand-name">Movie Recommender</span>
+      </div>
+      <div class="header-meta">
+        <span>{{ "{:,}".format(suggestions|length) }} titles</span>
+      </div>
+    </header>
+
+    <section class="search-panel" aria-labelledby="app-title">
+      <p class="eyebrow">Cinema intelligence</p>
+      <h1 id="app-title">Movie Recommendation System</h1>
+
+      <form id="movie-form" class="search-form">
+        <div class="search-control">
+          <span class="search-icon fa fa-search" aria-hidden="true"></span>
+          <div class="input-wrap">
+            <input
+              type="text"
+              name="movie"
+              class="movie-input form-control"
+              id="autoComplete"
+              autocomplete="off"
+              placeholder="Enter a movie name"
+              aria-autocomplete="list"
+              aria-expanded="false"
+              required
+            >
+            <div id="suggestions-menu" class="suggestions-menu" role="listbox"></div>
+          </div>
+          <button class="movie-button" type="submit" disabled>
+            <span class="fa fa-arrow-right" aria-hidden="true"></span>
+            <span>Search</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="quick-picks" aria-label="Quick movie picks">
+        <button type="button" data-title="Avatar">Avatar</button>
+        <button type="button" data-title="The Dark Knight Rises">The Dark Knight Rises</button>
+        <button type="button" data-title="Inception">Inception</button>
+        <button type="button" data-title="Titanic">Titanic</button>
+      </div>
+    </section>
+
+    <div class="fail" role="status"></div>
+
+    <main id="results" class="results" aria-live="polite">
+      <section class="empty-state">
+        <span class="fa fa-film" aria-hidden="true"></span>
+        <h2>Ready when you are</h2>
+      </section>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='autocomplete.js') }}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='recommend.js') }}"></script>
+</body>
+</html>
